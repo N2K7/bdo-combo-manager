@@ -1,56 +1,53 @@
 <!DOCTYPE html>
-<html lang="nl">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>BDO Combo Manager - Protected Edition</title>
+    <title>BDO Combo Manager - Colored Edition</title>
     <style>
         body { 
             font-family: 'Segoe UI', sans-serif; 
             background: #121212; 
             color: #e0e0e0; 
             padding: 20px; 
-            /* BEVEILIGING: Voorkom tekstselectie */
             -webkit-user-select: none;
             -ms-user-select: none;
             user-select: none;
         }
-
-        /* Zorg dat invoervelden wél blijven werken */
         input, select, textarea {
             -webkit-user-select: text;
             user-select: text;
         }
-
         .container { max-width: 750px; margin: auto; background: #1e1e1e; padding: 25px; border-radius: 12px; border: 1px solid #333; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
         h1 { color: #f2a900; text-align: center; text-transform: uppercase; margin-bottom: 5px; letter-spacing: 1px; }
-        .subtitle { text-align: center; color: #888; margin-bottom: 20px; font-size: 0.85em; }
-        
+        .subtitle { text-align: center; color: #aaa; margin-bottom: 25px; font-size: 0.9em; line-height: 1.5; background: #111; padding: 15px; border-radius: 8px; border: 1px solid #333; }
         .section { margin-bottom: 20px; padding: 15px; background: #252525; border-radius: 8px; border: 1px solid #333; }
-        label { display: block; margin-bottom: 5px; font-weight: bold; color: #aaa; font-size: 0.9em; }
-        
+        label { display: block; margin-bottom: 5px; font-weight: bold; color: #f2a900; font-size: 0.9em; }
         input, select, button { width: 100%; padding: 12px; margin-top: 5px; border-radius: 6px; border: 1px solid #444; background: #111; color: white; box-sizing: border-box; font-size: 14px; }
         
+        /* Platform Toggle Styling */
         .platform-toggle { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .platform-toggle label { background: #333; padding: 10px 20px; border-radius: 20px; cursor: pointer; border: 1px solid #444; font-size: 0.9em; transition: 0.2s; }
+        .platform-toggle label { background: #333; padding: 10px 20px; border-radius: 20px; cursor: pointer; border: 1px solid #444; font-size: 0.9em; transition: 0.2s; color: #fff;}
         .platform-toggle input { display: none; }
-        .platform-toggle input:checked + label { background: #f2a900; color: black; font-weight: bold; border-color: #f2a900; }
+        
+        /* Specific Colors for Toggle Buttons */
+        #pc:checked + label { background: #f2a900; color: black; font-weight: bold; border-color: #f2a900; }
+        #ps:checked + label { background: #003791; color: white; font-weight: bold; border-color: #003791; }
+        #xbox:checked + label { background: #107c10; color: white; font-weight: bold; border-color: #107c10; }
 
         .combo-visual { margin: 15px 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; min-height: 40px; padding: 10px; background: #1a1a1a; border-radius: 6px; }
-        .key-cap { 
-            background: #444; border: 1px solid #666; padding: 4px 10px; border-radius: 5px; 
-            font-weight: bold; color: #fff; font-family: 'Courier New', monospace; box-shadow: 0 2px 0 #000;
-        }
-        .ps-style { background: #003791; border-color: #004dc3; }
-        .xbox-style { background: #107c10; border-color: #159e15; }
+        
+        /* Key Cap Colors */
+        .key-cap { background: #444; border: 1px solid #666; padding: 4px 10px; border-radius: 5px; font-weight: bold; color: #fff; font-family: 'Courier New', monospace; box-shadow: 0 2px 0 #000; }
+        .pc-style { background: #f2a900; color: black; border-color: #c48900; }
+        .ps-style { background: #003791; color: white; border-color: #004dc3; }
+        .xbox-style { background: #107c10; color: white; border-color: #159e15; }
         
         .arrow { color: #f2a900; font-weight: bold; font-size: 18px; }
         .loadout-card { background: #2a2a2a; padding: 15px; margin-top: 15px; border-radius: 8px; border-left: 5px solid #f2a900; position: relative; }
-        
         .card-actions { position: absolute; top: 15px; right: 15px; display: flex; gap: 10px; }
         .btn-small { width: auto; padding: 6px 12px; cursor: pointer; border-radius: 4px; border: none; font-size: 11px; font-weight: bold; color: white; }
         .btn-copy { background: #444; }
         .btn-delete { background: #cc3333; }
-        
         .class-badge { background: #f2a900; color: black; padding: 2px 10px; border-radius: 4px; font-size: 11px; font-weight: bold; text-transform: uppercase; margin-bottom: 5px; display: inline-block; }
         .loadout-title { display: block; font-size: 1.1em; font-weight: bold; margin: 5px 0; color: #fff; }
     </style>
@@ -59,53 +56,58 @@
 
 <div class="container">
     <h1>BDO Combo Manager</h1>
-    <div class="subtitle">Select your class, paste your PC combo (for instance: Striker, W+RMB - Spacebar - Hold Spacebar - Shift+F) and press ADD. You can now save it for later and view the Playstation and XBOX conversion.</div>
+    <div class="subtitle">
+        Select your class, paste your PC combo (Example: Select Striker, then paste W+RMB - Spacebar - Hold Spacebar - Shift+F) and press ADD. Combo input should always be separated with commas or dashes like in the example (, or -)<br><br>
+        You can now save it for later and view the Playstation and XBOX conversion. Use the Search function if you have multiple combos saved for more than one class. Browser cache clearing also clears your saved combos!
+    </div>
 
     <div class="platform-toggle">
-        <input type="radio" name="platform" id="pc" value="pc" onchange="displaySaved()">
+        <input type="radio" name="platform" id="pc" value="pc" checked onchange="displaySaved()">
         <label for="pc">⌨️ PC</label>
-        <input type="radio" name="platform" id="ps" value="ps" checked onchange="displaySaved()">
+        <input type="radio" name="platform" id="ps" value="ps" onchange="displaySaved()">
         <label for="ps">🎮 PlayStation</label>
         <input type="radio" name="platform" id="xbox" value="xbox" onchange="displaySaved()">
         <label for="xbox">🎮 Xbox</label>
     </div>
 
     <div class="section">
-        <label>Klasse & Naam:</label>
+        <label>Class & Name:</label>
         <div style="display: flex; gap: 10px;">
             <select id="classSelect" style="flex: 1.2;">
                 <option>Warrior</option><option>Ranger</option><option>Sorceress</option><option>Berserker</option><option>Tamer</option><option>Musa</option><option>Maehwa</option><option>Valkyrie</option><option>Kunoichi</option><option>Ninja</option><option>Wizard</option><option>Witch</option><option>Dark Knight</option><option>Striker</option><option>Mystic</option><option>Lahn</option><option>Archer</option><option>Shai</option><option>Guardian</option><option>Hashashin</option><option>Nova</option><option>Sage</option><option>Corsair</option><option>Drakania</option><option>Woosa</option><option>Maegu</option><option>Scholar</option><option>Dosa</option>
             </select>
-            <input type="text" id="loadoutName" placeholder="Bijv. Grind Combo">
+            <input type="text" id="loadoutName" placeholder="e.g. PvP Grind">
         </div>
     </div>
 
     <div class="section">
-        <label>Combo Invoeren (PC Toetsen):</label>
-        <input type="text" id="pcInput" placeholder="Bijv: W+RMB, Shift-F, Space">
-        <button onclick="addSteps()" style="background:#444; color:white; margin-top:10px;">➕ Toevoegen</button>
+        <label>Input Combo (PC Keys):</label>
+        <input type="text" id="pcInput" placeholder="Paste steps here...">
+        <button onclick="addSteps()" style="background:#444; color:white; margin-top:10px;">➕ ADD</button>
+        
         <div id="currentPreview" class="combo-visual"></div>
+        
         <div style="display: flex; gap: 10px;">
-            <button onclick="saveLoadout()" style="flex: 2; background:#f2a900; color:black;">💾 Opslaan</button>
-            <button onclick="clearCurrent()" style="flex: 1; background:#555; color:white;">Reset</button>
+            <button onclick="saveLoadout()" style="flex: 2; background:#f2a900; color:black;">💾 SAVE LOADOUT</button>
+            <button onclick="clearCurrent()" style="flex: 1; background:#555; color:white;">RESET</button>
         </div>
     </div>
 
-    <input type="text" id="searchBar" placeholder="Zoek op klasse of naam..." style="background:#111; margin-bottom: 10px;" onkeyup="displaySaved()">
+    <input type="text" id="searchBar" placeholder="Search by class or name..." style="background:#111; margin-bottom: 10px; border: 1px solid #333;" onkeyup="displaySaved()">
+    
     <div id="savedLoadouts"></div>
 </div>
 
 <script>
-    /* BEVEILIGING: Blokkeer Rechtermuisknop & Sneltoetsen */
-    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('contextmenu', e => { e.preventDefault(); alert("Right-click is disabled."); });
     document.onkeydown = function(e) {
         if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67 || (e.shiftKey && e.keyCode === 73))) return false;
         if (e.keyCode === 123) return false;
     };
 
     const layouts = {
-        ps: { 'LMB': 'R1', 'RMB': 'R2', 'Q': 'L1', 'Shift': 'L2', 'Space': 'X', 'Spacebar': 'X', 'E': '□', 'F': '○', 'C': '△', 'W': 'Forward', 'A': 'Left', 'S': 'Back', 'D': 'Right' },
-        xbox: { 'LMB': 'RB', 'RMB': 'RT', 'Q': 'LB', 'Shift': 'LT', 'Space': 'A', 'Spacebar': 'A', 'E': 'X', 'F': 'B', 'C': 'Y', 'W': 'Forward', 'A': 'Left', 'S': 'Back', 'D': 'Right' }
+        ps: { 'LMB': 'R1', 'RMB': 'R2', 'Q': 'L1', 'SHIFT': 'L2', 'SPACE': 'X', 'SPACEBAR': 'X', 'E': '□', 'F': '○', 'C': '△', 'W': 'Forward', 'A': 'Left', 'S': 'Back', 'D': 'Right' },
+        xbox: { 'LMB': 'RB', 'RMB': 'RT', 'Q': 'LB', 'SHIFT': 'LT', 'SPACE': 'A', 'SPACEBAR': 'A', 'E': 'X', 'F': 'B', 'C': 'Y', 'W': 'Forward', 'A': 'Left', 'S': 'Back', 'D': 'Right' }
     };
 
     let currentSteps = [];
@@ -113,9 +115,15 @@
     function translate(step, platform) {
         if (platform === 'pc') return step;
         return step.split('+').map(key => {
-            const k = key.trim();
-            const upperK = k.toUpperCase();
-            return layouts[platform][k] || layouts[platform][upperK] || k;
+            let k = key.trim().toUpperCase();
+            let translated = k;
+            for (let pcKey in layouts[platform]) {
+                if (k.includes(pcKey)) {
+                    translated = k.replace(pcKey, layouts[platform][pcKey]);
+                    break;
+                }
+            }
+            return translated;
         }).join('+');
     }
 
@@ -130,32 +138,31 @@
     function updateDisplay() {
         const platform = document.querySelector('input[name="platform"]:checked').value;
         const display = document.getElementById('currentPreview');
-        if (currentSteps.length === 0) { display.innerHTML = ""; return; }
-        display.innerHTML = currentSteps.map(s => `<span class="key-cap ${platform === 'pc' ? '' : platform + '-style'}">${translate(s, platform)}</span>`).join('<span class="arrow">→</span>');
+        if (currentSteps.length === 0) { display.innerHTML = `<span style='color:#444; font-size:0.9em;'>Wait for input...</span>`; return; }
+        display.innerHTML = currentSteps.map(s => `<span class="key-cap ${platform + '-style'}">${translate(s, platform)}</span>`).join('<span class="arrow">→</span>');
     }
 
     function clearCurrent() { currentSteps = []; updateDisplay(); }
 
     function saveLoadout() {
-        const name = document.getElementById('loadoutName').value || "Mijn Combo";
+        const name = document.getElementById('loadoutName').value || "Combo";
         const bdoClass = document.getElementById('classSelect').value;
         if (currentSteps.length === 0) return;
-        const loadouts = JSON.parse(localStorage.getItem('bdo_v10_loadouts') || "[]");
+        const loadouts = JSON.parse(localStorage.getItem('bdo_v15_loadouts') || "[]");
         loadouts.push({ id: Date.now(), class: bdoClass, name: name, steps: [...currentSteps] });
-        localStorage.setItem('bdo_v10_loadouts', JSON.stringify(loadouts));
+        localStorage.setItem('bdo_v15_loadouts', JSON.stringify(loadouts));
         clearCurrent();
+        document.getElementById('loadoutName').value = "";
         displaySaved();
     }
 
     function copyToClipboard(id) {
         const platform = document.querySelector('input[name="platform"]:checked').value;
-        const loadouts = JSON.parse(localStorage.getItem('bdo_v10_loadouts') || "[]");
+        const loadouts = JSON.parse(localStorage.getItem('bdo_v15_loadouts') || "[]");
         const loadout = loadouts.find(l => l.id === id);
         if (loadout) {
             const text = loadout.steps.map(s => translate(s, platform)).join(' → ');
-            navigator.clipboard.writeText(text).then(() => {
-                alert("Combo gekopieerd naar klembord!");
-            });
+            navigator.clipboard.writeText(text).then(() => { alert("Combo copied to clipboard!"); });
         }
     }
 
@@ -163,27 +170,27 @@
         const platform = document.querySelector('input[name="platform"]:checked').value;
         const searchTerm = document.getElementById('searchBar').value.toLowerCase();
         const container = document.getElementById('savedLoadouts');
-        const loadouts = JSON.parse(localStorage.getItem('bdo_v10_loadouts') || "[]");
+        const loadouts = JSON.parse(localStorage.getItem('bdo_v15_loadouts') || "[]");
         updateDisplay();
         const filtered = loadouts.filter(l => l.class.toLowerCase().includes(searchTerm) || l.name.toLowerCase().includes(searchTerm));
         container.innerHTML = filtered.reverse().map(l => `
             <div class="loadout-card">
                 <div class="card-actions">
-                    <button class="btn-small btn-copy" onclick="copyToClipboard(${l.id})">📋 Kopieer</button>
-                    <button class="btn-small btn-delete" onclick="deleteL(${l.id})">Wissen</button>
+                    <button class="btn-small btn-copy" onclick="copyToClipboard(${l.id})">📋 COPY</button>
+                    <button class="btn-small btn-delete" onclick="deleteL(${l.id})">DELETE</button>
                 </div>
                 <span class="class-badge">${l.class}</span>
                 <span class="loadout-title">${l.name}</span>
                 <div class="combo-visual">
-                    ${l.steps.map(s => `<span class="key-cap ${platform === 'pc' ? '' : platform + '-style'}">${translate(s, platform)}</span>`).join('<span class="arrow" style="font-size:14px;">▶</span>')}
+                    ${l.steps.map(s => `<span class="key-cap ${platform + '-style'}">${translate(s, platform)}</span>`).join('<span class="arrow" style="font-size:14px;">▶</span>')}
                 </div>
             </div>
         `).join('');
     }
 
     function deleteL(id) {
-        let loadouts = JSON.parse(localStorage.getItem('bdo_v10_loadouts') || "[]");
-        localStorage.setItem('bdo_v10_loadouts', JSON.stringify(loadouts.filter(l => l.id !== id)));
+        let loadouts = JSON.parse(localStorage.getItem('bdo_v15_loadouts') || "[]");
+        localStorage.setItem('bdo_v15_loadouts', JSON.stringify(loadouts.filter(l => l.id !== id)));
         displaySaved();
     }
 
