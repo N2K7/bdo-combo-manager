@@ -82,7 +82,7 @@
 
     <div class="section">
         <label>Input Combo (PC Keys):</label>
-        <input type="text" id="pcInput" placeholder="Paste steps here...">
+        <input type="text" id="pcInput" placeholder="e.g. W+RMB - Hold Spacebar - Shift+F">
         <button onclick="addSteps()" style="background:#444; color:white; margin-top:10px;">➕ ADD</button>
         
         <div id="currentPreview" class="combo-visual"></div>
@@ -114,17 +114,22 @@
 
     function translate(step, platform) {
         if (platform === 'pc') return step;
-        return step.split('+').map(key => {
-            let k = key.trim().toUpperCase();
-            let translated = k;
-            for (let pcKey in layouts[platform]) {
-                if (k.includes(pcKey)) {
-                    translated = k.replace(pcKey, layouts[platform][pcKey]);
-                    break;
+        
+        return step.split(' ').map(part => {
+            if (part.toUpperCase() === 'HOLD') return 'Hold';
+            
+            return part.split('+').map(key => {
+                let k = key.trim().toUpperCase();
+                let translated = k;
+                for (let pcKey in layouts[platform]) {
+                    if (k === pcKey) {
+                        translated = layouts[platform][pcKey];
+                        break;
+                    }
                 }
-            }
-            return translated;
-        }).join('+');
+                return translated;
+            }).join('+');
+        }).join(' ');
     }
 
     function addSteps() {
@@ -156,13 +161,15 @@
         displaySaved();
     }
 
+    // AANGEPASTE FUNCTIE: Geen pijltjes in clipboard
     function copyToClipboard(id) {
         const platform = document.querySelector('input[name="platform"]:checked').value;
         const loadouts = JSON.parse(localStorage.getItem('bdo_v15_loadouts') || "[]");
         const loadout = loadouts.find(l => l.id === id);
         if (loadout) {
-            const text = loadout.steps.map(s => translate(s, platform)).join(' → ');
-            navigator.clipboard.writeText(text).then(() => { alert("Combo copied to clipboard!"); });
+            // We gebruiken hier een gewone spatie of streepje in plaats van het pijltje
+            const text = loadout.steps.map(s => translate(s, platform)).join(' - ');
+            navigator.clipboard.writeText(text).then(() => { alert("Combo copied!"); });
         }
     }
 
@@ -197,7 +204,4 @@
     displaySaved();
 </script>
 </body>
-
 </html>
-
-
